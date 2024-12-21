@@ -13,7 +13,8 @@ func main() {
 
 	//gin
 	router := gin.Default()
-	router.GET("/api/ticket/:ticketCode", api.TicketAPI)
+	router.GET("/ticket/check/:ticketCode", api.TicketCheckAPI)
+	router.GET("/ticket/create/:ticketCode", api.TicketCreateAPI)
 	err2 := router.Run(":8080")
 	if err2 != nil {
 		panic("Start Router Failed, Error:" + err2.Error())

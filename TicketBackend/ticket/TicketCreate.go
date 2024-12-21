@@ -1,15 +1,18 @@
 package ticket
 
-import "TicketBackend/sql"
+import (
+	"TicketBackend/sql"
+	"fmt"
+)
 
-func Create(ticketCode string) {
+func Create(ticketCode string) (err error) {
 	ticket1 := Ticket{
 		TicketCode: ticketCode,
 	}
 
-	err := sql.DB.Create(&ticket1).Error
-	if err != nil {
-		panic("ticket Create Failed, Error=" + err.Error())
+	e := sql.DB.Create(&ticket1).Error
+	if e != nil {
+		return fmt.Errorf("ticket Create Failed, Error=" + e.Error())
 	}
-
+	return nil
 }

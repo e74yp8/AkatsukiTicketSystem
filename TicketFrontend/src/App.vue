@@ -1,47 +1,59 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import {QrcodeStream} from 'vue-qrcode-reader'
+import {ref} from "vue";
+
+const result = ref('')
+const error = ref('')
+
+function paintBoundingBox(detectedCodes, ctx) {
+  for (const detectedCode of detectedCodes) {
+    const {
+      boundingBox: {x, y, width, height}
+    } = detectedCode
+
+    ctx.lineWidth = 2
+    ctx.strokeStyle = '#007bff'
+    ctx.strokeRect(x, y, width, height)
+  }
+}
+
+function onError(err) {
+  error.value = `[${err.name}]: `
+
+  if (err.name === 'NotAllowedError') {
+    error.value += 'you need to grant camera access permission'
+  } else if (err.name === 'NotFoundError') {
+    error.value += 'no camera on this device'
+  } else if (err.name === 'NotSupportedError') {
+    error.value += 'secure context required (HTTPS, localhost)'
+  } else if (err.name === 'NotReadableError') {
+    error.value += 'is the camera already in use?'
+  } else if (err.name === 'OverconstrainedError') {
+    error.value += 'installed cameras are not suitable'
+  } else if (err.name === 'StreamApiNotSupportedError') {
+    error.value += 'Stream API is not supported in this browser'
+  } else if (err.name === 'InsecureContextError') {
+    error.value += 'Camera access is only permitted in secure context. Use HTTPS or localhost rather than HTTP.'
+  } else {
+    error.value += err.message
+  }
+}
+
+function onDetect(detectedCodes) {
+  result.value = detectedCodes.map(code => code.rawValue)[0]
+  fetch('http://localhost:8080/ticket/check/' + result.value)
+      .then(response => {
+        console.log(response);
+        console.log(response.status);
+      })
+
+}
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div style="height: 60%">
+    <qrcode-stream :track="paintBoundingBox" @detect="onDetect" @error="onError"></qrcode-stream>
+  </div>
+  <p>Last result: <b>{{ result }}</b></p>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
