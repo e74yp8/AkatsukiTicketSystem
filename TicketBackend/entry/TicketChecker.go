@@ -22,6 +22,11 @@ func TicketCheck(ticketCode string) (err error) {
 			return fmt.Errorf("ticket has been disabled, ticketcode: %v", ticketCode)
 		}
 	}
+
+	if !ticket.CheckTime(ticketCode) {
+		return fmt.Errorf("entry time is not yet arrived, ticketcode: %v", ticketCode)
+	}
+
 	err = ticket.UpdateStatus(ticketCode, 1)
 	if err != nil {
 		return err

@@ -7,7 +7,7 @@ import (
 
 func CheckStatus(ticketCode string) (status int, err error) {
 	if len(ticketCode) != codeLength {
-		return 0, fmt.Errorf("ticketcode length not match, given length: %v, required length: %v", len(ticketCode), codeLength)
+		return -1, fmt.Errorf("ticketcode length not match, given length: %v, required length: %v", len(ticketCode), codeLength)
 	}
 
 	var ticketList []Ticket

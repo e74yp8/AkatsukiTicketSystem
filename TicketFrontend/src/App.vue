@@ -57,3 +57,6 @@ function onDetect(detectedCodes) {
   </div>
   <p>Last result: <b>{{ result }}</b></p>
 </template>
+
+
+<!--TODO:界面改得花裡胡哨一點-->
