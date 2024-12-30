@@ -21,6 +21,5 @@ func UpdateStatus(ticketCode string, status int) (err error) {
 	ticket.Status = status
 	sql.DB.Select("status").Save(&ticket)
 
-	//fmt.Println("更新完成")
 	return nil
 }

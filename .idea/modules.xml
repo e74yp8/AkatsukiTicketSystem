@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HarumatsuriTicketSystem.iml" filepath="$PROJECT_DIR$/HarumatsuriTicketSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AkatsukiTicketSystem.iml" filepath="$PROJECT_DIR$/AkatsukiTicketSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/TicketBackend.iml" filepath="$PROJECT_DIR$/TicketBackend.iml" />
       <module fileurl="file://$PROJECT_DIR$/TicketFrontend.iml" filepath="$PROJECT_DIR$/TicketFrontend.iml" />
     </modules>

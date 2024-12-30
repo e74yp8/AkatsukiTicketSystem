@@ -2,23 +2,24 @@ package ticket
 
 import (
 	"TicketBackend/sql"
-	"TicketBackend/timeSlot"
 	"fmt"
-	"time"
 )
 
-func Create(ticketCode string, slot time.Time) (err error) {
+func Create(ticketCode string, email string) (id uint, err error) {
 	ticket1 := Ticket{
 		TicketCode: ticketCode,
-		TimeSlot:   slot,
+		Email:      email,
 	}
 
 	e := sql.DB.Create(&ticket1).Error
 	if e != nil {
-		return fmt.Errorf("ticket Create Failed, Error=" + e.Error())
+		return 0, fmt.Errorf("ticket Create Failed, Error=" + e.Error())
 	}
 
-	timeSlot.CountUpdate(slot)
+	id, e = CheckId(ticketCode)
+	if e != nil {
+		return 0, fmt.Errorf("ticket Create Failed, Error=" + e.Error())
+	}
 
-	return nil
+	return id, nil
 }

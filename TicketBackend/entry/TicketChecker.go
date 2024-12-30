@@ -1,6 +1,7 @@
 package entry
 
 import (
+	"TicketBackend/googlesheet"
 	"TicketBackend/ticket"
 	"fmt"
 )
@@ -23,8 +24,13 @@ func TicketCheck(ticketCode string) (err error) {
 		}
 	}
 
-	if !ticket.CheckTime(ticketCode) {
-		return fmt.Errorf("entry time is not yet arrived, ticketcode: %v", ticketCode)
+	id, err := ticket.CheckId(ticketCode)
+	if err != nil {
+		return err
+	}
+
+	if id > uint(googlesheet.GetLimitId()) {
+		return fmt.Errorf("id is not yet allow entered, ticketcode: %v", ticketCode)
 	}
 
 	err = ticket.UpdateStatus(ticketCode, 1)
