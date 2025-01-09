@@ -16,11 +16,10 @@ func main() {
 	router.GET("/ticket/check/:ticketCode", api.TicketCheckAPI)
 	router.GET("/ticket/check_exist/:ticketCode", api.TicketCheckExistAPI)
 	router.GET("/ticket/create/:ticketCode/:email", api.TicketCreateAPI)
-	//router.GET("/ticket/checkid", api.CheckLimitIdAPI)
+	router.GET("/ticket/checkid", api.CheckLimitIdAPI)
 
 	err2 := router.Run(":8080")
 	if err2 != nil {
 		panic("Start Router Failed, Error:" + err2.Error())
 	}
-
 }

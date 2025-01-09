@@ -4,7 +4,7 @@ type Ticket struct {
 	Id         uint   `gorm:"primaryKey;autoIncrement;unique;not null"`
 	TicketCode string `gorm:"size:128"`
 	Status     int    `gorm:"size:1;default:0"`
-	Email      string `gorm:"size:64"` // TODO: ticket要綁定email
+	Email      string `gorm:"size:64"`
 	// TODO: resend qrcode function
 }
 

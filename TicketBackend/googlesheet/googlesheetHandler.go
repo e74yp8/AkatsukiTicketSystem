@@ -13,7 +13,6 @@ import (
 
 // 指定要写入的 Spreadsheet ID 和 Sheet 名称
 var spreadsheetId = "114qcgtr7YergFkRYKOotj2g3-8OSDY3ZY3YoDD-ZqZM"
-var readRange = "Sheet1!B1"
 var srv *sheets.Service
 
 func init() {
@@ -39,7 +38,7 @@ func init() {
 }
 
 func GetLimitId() (idLimit int) {
-	resp, err := srv.Spreadsheets.Values.Get(spreadsheetId, readRange).Do()
+	resp, err := srv.Spreadsheets.Values.Get(spreadsheetId, "Sheet1!B1").Do()
 	if err != nil {
 		panic("Unable to retrieve data from sheet: %v" + err.Error())
 	}
