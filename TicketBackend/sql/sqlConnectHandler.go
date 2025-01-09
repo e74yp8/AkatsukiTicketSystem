@@ -13,7 +13,7 @@ func ConnectSQL() {
 	password := "123456"
 	host := "127.0.0.1"
 	port := 3306
-	Dbname := "harumatsuri"
+	Dbname := "akatsuki"
 	timeout := "10s"
 
 	// root:root@tcp(127.0.0.1:3306)/gorm?

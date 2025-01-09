@@ -41,18 +41,29 @@ function onError(err) {
 
 function onDetect(detectedCodes) {
   result.value = detectedCodes.map(code => code.rawValue)[0]
-  fetch('http://localhost:8080/ticket/check/' + result.value)
-      .then(response => {
-        console.log(response);
-        console.log(response.status);
-      })
+  try {
+    const response = fetch("http://localhost:8080/ticket/check/" + result.value);
+    const json = response.json();
+    console.log(json);
+  } catch (error) {
+    console.error(error.message);
+  }
 
 }
-
 </script>
 
+<style>
+div {
+  height: 50%;
+}
+
+html, body {
+  height: 100%;
+}
+</style>
+
 <template>
-  <div style="height: 60%">
+  <div style="height:100%">
     <qrcode-stream :track="paintBoundingBox" @detect="onDetect" @error="onError"></qrcode-stream>
   </div>
   <p>Last result: <b>{{ result }}</b></p>

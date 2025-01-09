@@ -4,5 +4,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/TicketFrontend" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="html5-qrcode" level="application" />
   </component>
 </module>
