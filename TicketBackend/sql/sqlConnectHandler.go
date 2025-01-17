@@ -1,6 +1,7 @@
 package sql
 
 import (
+	"TicketBackend/config"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -9,11 +10,12 @@ import (
 var DB *gorm.DB
 
 func ConnectSQL() {
-	username := "ticketadmin"
-	password := "123456"
-	host := "127.0.0.1"
-	port := 3306
-	Dbname := "akatsuki"
+	cfg := config.LoadConfig()
+	username := cfg.MySQL.Username
+	password := cfg.MySQL.Password
+	host := cfg.MySQL.Host
+	port := cfg.MySQL.Port
+	Dbname := cfg.MySQL.Database
 	timeout := "10s"
 
 	// root:root@tcp(127.0.0.1:3306)/gorm?

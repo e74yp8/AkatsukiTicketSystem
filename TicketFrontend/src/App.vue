@@ -1,9 +1,14 @@
 <script setup>
 import {QrcodeStream} from 'vue-qrcode-reader'
 import {ref} from "vue";
+import axios from "axios";
+
 
 const result = ref('')
 const error = ref('')
+const id = ref('')
+const status = ref('')
+let bgColor = '#ffffff'
 
 function paintBoundingBox(detectedCodes, ctx) {
   for (const detectedCode of detectedCodes) {
@@ -39,35 +44,113 @@ function onError(err) {
   }
 }
 
-function onDetect(detectedCodes) {
+async function onDetect(detectedCodes) {
   result.value = detectedCodes.map(code => code.rawValue)[0]
-  try {
-    const response = fetch("http://localhost:8080/ticket/check/" + result.value);
-    const json = response.json();
-    console.log(json);
-  } catch (error) {
-    console.error(error.message);
-  }
 
+  const URL = "/api/ticket/check/" + result.value;
+  try {
+    axios.get(URL, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      id.value = response.data.id;
+      status.value = response.data.status;
+      if (status.value === "可入場") {
+        bgColor = "#69e62b"
+      } else {
+        bgColor = "#fa5353"
+      }
+      document.body.style.backgroundColor = bgColor;
+    }).catch(error => {
+      console.error('發生錯誤！', error);
+      error.value = error;
+    });
+  } catch (e) {
+    console.log(e);
+    error.value = e;
+  }
 }
+
+function reset_data() {
+  id.value = "";
+  status.value = "";
+  error.value = "";
+  document.body.style.backgroundColor = "#ffffff";
+}
+
 </script>
 
-<style>
-div {
-  height: 50%;
-}
 
+<style>
 html, body {
   height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
 }
+
+.qrcode-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.qrcode-stream {
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: 600px;
+}
+
+.id {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #333;
+}
+
+.error-message {
+  color: red;
+}
+
+#app {
+  height: 60%;
+}
+
+h1 {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 </style>
 
 <template>
-  <div style="height:100%">
-    <qrcode-stream :track="paintBoundingBox" @detect="onDetect" @error="onError"></qrcode-stream>
+  <h1>{{ status }}</h1>
+  <div class="qrcode-container">
+    <qrcode-stream class="qrcode-stream" :track="paintBoundingBox" @detect="onDetect" @error="onError"></qrcode-stream>
+    <p class="id">籌號: <b>{{ id }}</b></p>
+    <p class="error-message" v-if="error">{{ error }}</p>
   </div>
-  <p>Last result: <b>{{ result }}</b></p>
+
+  <div style="width: 100%; display: flex; justify-content: center;">
+    <button @click="reset_data">重設</button>
+  </div>
 </template>
-
-
-<!--TODO:界面改得花裡胡哨一點-->

@@ -8,11 +8,15 @@ import (
 )
 
 func TicketCheckAPI(ctx *gin.Context) {
-	err := entry.TicketCheck(ctx.Param("ticketCode"))
+	ticketCode := ctx.Param("ticketCode")
+	err := entry.TicketCheck(ticketCode)
+	id, err2 := ticket.CheckId(ticketCode)
 	if err != nil {
-		ctx.JSON(400, err.Error())
+		ctx.JSON(200, gin.H{"id": id, "status": err.Error()})
+	} else if err2 != nil {
+		ctx.JSON(200, gin.H{"id": id, "status": err2.Error()})
 	} else {
-		ctx.JSON(200, "Checked")
+		ctx.JSON(200, gin.H{"id": id, "status": "可入場"})
 	}
 }
 
